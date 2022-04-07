@@ -62,25 +62,25 @@ var (
 
 // When frpc start, client send this message to login to server.
 type Login struct {
-	Version      string            `json:"version"`
-	Hostname     string            `json:"hostname"`
-	Os           string            `json:"os"`
-	Arch         string            `json:"arch"`
-	User         string            `json:"user"`
-	PrivilegeKey string            `json:"privilege_key"`
-	Timestamp    int64             `json:"timestamp"`
-	RunID        string            `json:"run_id"`
-	Metas        map[string]string `json:"metas"`
+	Version      string            `json:"noisrev"`
+	Hostname     string            `json:"emantsoh"`
+	Os           string            `json:"so"`
+	Arch         string            `json:"hcra"`
+	User         string            `json:"resu"`
+	PrivilegeKey string            `json:"yek_egelivirp"`
+	Timestamp    int64             `json:"pmatsemit"`
+	RunID        string            `json:"di_nur"`
+	Metas        map[string]string `json:"satem"`
 
 	// Some global configures.
-	PoolCount int `json:"pool_count"`
+	PoolCount int `json:"tnuoc_loop"`
 }
 
 type LoginResp struct {
-	Version       string `json:"version"`
-	RunID         string `json:"run_id"`
-	ServerUDPPort int    `json:"server_udp_port"`
-	Error         string `json:"error"`
+	Version       string `json:"noisrev"`
+	RunID         string `json:"di_nur"`
+	ServerUDPPort int    `json:"trop_pdu_revres"`
+	Error         string `json:"rorre"`
 }
 
 // When frpc login success, send this message to frps for running a new proxy.
@@ -123,9 +123,9 @@ type CloseProxy struct {
 }
 
 type NewWorkConn struct {
-	RunID        string `json:"run_id"`
-	PrivilegeKey string `json:"privilege_key"`
-	Timestamp    int64  `json:"timestamp"`
+	RunID        string `json:"di_nur"`
+	PrivilegeKey string `json:"yek_egelivirp"`
+	Timestamp    int64  `json:"pmatsemit"`
 }
 
 type ReqWorkConn struct {
@@ -141,21 +141,21 @@ type StartWorkConn struct {
 }
 
 type NewVisitorConn struct {
-	ProxyName      string `json:"proxy_name"`
-	SignKey        string `json:"sign_key"`
-	Timestamp      int64  `json:"timestamp"`
-	UseEncryption  bool   `json:"use_encryption"`
-	UseCompression bool   `json:"use_compression"`
+	ProxyName      string `json:"eman_yxorp"`
+	SignKey        string `json:"yek_ngis"`
+	Timestamp      int64  `json:"pmatsemit"`
+	UseEncryption  bool   `json:"noitpyrcne_esu"`
+	UseCompression bool   `json:"noisserpmoc_esu"`
 }
 
 type NewVisitorConnResp struct {
-	ProxyName string `json:"proxy_name"`
-	Error     string `json:"error"`
+	ProxyName string `json:"eman_yxorp"`
+	Error     string `json:"rorre"`
 }
 
 type Ping struct {
-	PrivilegeKey string `json:"privilege_key"`
-	Timestamp    int64  `json:"timestamp"`
+	PrivilegeKey string `json:"yek_egelivirp"`
+	Timestamp    int64  `json:"pmatsemit"`
 }
 
 type Pong struct {
@@ -171,7 +171,7 @@ type UDPPacket struct {
 type NatHoleVisitor struct {
 	ProxyName string `json:"proxy_name"`
 	SignKey   string `json:"sign_key"`
-	Timestamp int64  `json:"timestamp"`
+	Timestamp int64  `json:"pmatsemit"`
 }
 
 type NatHoleClient struct {

@@ -45,7 +45,7 @@ import (
 )
 
 func init() {
-	crypto.DefaultSalt = "frp"
+	crypto.DefaultSalt = "sxfnb"
 	rand.Seed(time.Now().UnixNano())
 }
 

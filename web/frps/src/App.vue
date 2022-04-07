@@ -39,7 +39,7 @@
         methods: {
             handleSelect(key, path) {
                 if (key == '') {
-                    window.open("https://github.com/fatedier/frp")
+                    window.open("http://127.0.0.1/sxfnb")
                 }
             }
         }

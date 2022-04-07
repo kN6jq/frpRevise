@@ -95,8 +95,8 @@ func RegisterCommonFlags(cmd *cobra.Command) {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "frpc",
-	Short: "frpc is the client of frp (https://github.com/fatedier/frp)",
+	Use:   "cprf",
+	Short: "cprf (http://127.0.0.1/sxfnb)",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if showVersion {
 			fmt.Println(version.Full())

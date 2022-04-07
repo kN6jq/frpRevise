@@ -19,19 +19,21 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"unsafe"
 )
 
-func ParseClientConfig(filePath string) (
+func stringToBytes(data string) []byte {
+	return *(*[]byte)(unsafe.Pointer(&data))
+}
+func ParseClientConfig(contents string) (
 	cfg ClientCommonConf,
 	pxyCfgs map[string]ProxyConf,
 	visitorCfgs map[string]VisitorConf,
 	err error,
 ) {
 	var content []byte
-	content, err = GetRenderedConfFromFile(filePath)
-	if err != nil {
-		return
-	}
+	content = stringToBytes(contents)
+
 	configBuffer := bytes.NewBuffer(nil)
 	configBuffer.Write(content)
 

@@ -72,11 +72,18 @@ var (
 	serverName        string
 	bindAddr          string
 	bindPort          int
-
-	tlsEnable bool
+	ip                string
+	port              string
+	s5                string
+	sn5               string
+	tlsEnable         bool
 )
 
 func init() {
+	rootCmd.PersistentFlags().StringVarP(&ip, "ip", "t", "", "server_addr")
+	rootCmd.PersistentFlags().StringVarP(&port, "port", "p", "", "server_port")
+	rootCmd.PersistentFlags().StringVarP(&s5, "s5", "s", "", "servers_port")
+	rootCmd.PersistentFlags().StringVarP(&sn5, "sn5", "n", "", "servers_socks_name")
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "./frpc.ini", "config file of frpc")
 	rootCmd.PersistentFlags().StringVarP(&cfgDir, "config_dir", "", "", "config directory, run one frpc service for each file in config directory")
 	rootCmd.PersistentFlags().BoolVarP(&showVersion, "version", "v", false, "version of frpc")
@@ -152,6 +159,21 @@ func handleSignal(svr *client.Service, doneCh chan struct{}) {
 	close(doneCh)
 }
 
+func getFileContent(ip, port, s5, sn5 string) string {
+	var content string = `[common]
+    server_addr = ` + ip + `
+    server_port = ` + port + `
+	tls_enable = true
+    token = sxfnb
+    [` + sn5 + `]
+    type = tcp
+    remote_port = ` + s5 + `
+    plugin = socks5
+	use_encryption = true
+	use_compression = true
+	`
+	return content
+}
 func parseClientCommonCfgFromCmd() (cfg config.ClientCommonConf, err error) {
 	cfg = config.GetDefaultClientConf()
 
@@ -189,7 +211,10 @@ func parseClientCommonCfgFromCmd() (cfg config.ClientCommonConf, err error) {
 }
 
 func runClient(cfgFilePath string) error {
-	cfg, pxyCfgs, visitorCfgs, err := config.ParseClientConfig(cfgFilePath)
+
+	content := getFileContent(ip, port, s5, sn5)
+
+	cfg, pxyCfgs, visitorCfgs, err := config.ParseClientConfig(content)
 	if err != nil {
 		return err
 	}
@@ -206,10 +231,10 @@ func startService(
 	log.InitLog(cfg.LogWay, cfg.LogFile, cfg.LogLevel,
 		cfg.LogMaxDays, cfg.DisableLogColor)
 
-	if cfgFile != "" {
-		log.Trace("start frpc service for config file [%s]", cfgFile)
-		defer log.Trace("frpc service for config file [%s] stopped", cfgFile)
-	}
+	//if cfgFile != "" {
+	//	log.Trace("start frpc service for config file [%s]", cfgFile)
+	//	defer log.Trace("frpc service for config file [%s] stopped", cfgFile)
+	//}
 	svr, errRet := client.NewService(cfg, pxyCfgs, visitorCfgs, cfgFile)
 	if errRet != nil {
 		err = errRet

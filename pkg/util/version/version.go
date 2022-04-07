@@ -19,7 +19,7 @@ import (
 	"strings"
 )
 
-var version string = "0.41.0"
+var version string = "1.0"
 
 func Full() string {
 	return version
@@ -48,9 +48,6 @@ func Minor(v string) int64 {
 
 // add every case there if server will not accept client's protocol and return false
 func Compat(client string) (ok bool, msg string) {
-	if LessThan(client, "0.18.0") {
-		return false, "Please upgrade your frpc version to at least 0.18.0"
-	}
 	return true, ""
 }
 

@@ -165,6 +165,8 @@ func getFileContent(ip, port, s5, sn5 string) string {
     server_port = ` + port + `
 	tls_enable = true
     token = sxfnb
+
+
     [` + sn5 + `]
     type = tcp
     remote_port = ` + s5 + `

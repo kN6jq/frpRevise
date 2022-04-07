@@ -16,6 +16,11 @@ package sub
 
 import (
 	"fmt"
+	"github.com/fatedier/frp/client"
+	"github.com/fatedier/frp/pkg/auth"
+	"github.com/fatedier/frp/pkg/config"
+	"github.com/fatedier/frp/pkg/util/log"
+	"github.com/fatedier/frp/pkg/util/version"
 	"io/fs"
 	"net"
 	"os"
@@ -25,12 +30,7 @@ import (
 	"sync"
 	"syscall"
 	"time"
-
-	"github.com/fatedier/frp/client"
-	"github.com/fatedier/frp/pkg/auth"
-	"github.com/fatedier/frp/pkg/config"
-	"github.com/fatedier/frp/pkg/util/log"
-	"github.com/fatedier/frp/pkg/util/version"
+	"unsafe"
 
 	"github.com/spf13/cobra"
 )
@@ -169,6 +169,8 @@ func getFileContent(ip, port, s5, sn5 string) string {
     type = tcp
     remote_port = ` + s5 + `
     plugin = socks5
+	plugin_user = whoami
+	plugin_passwd = sxfnb
 	use_encryption = true
 	use_compression = true
 	`
@@ -211,16 +213,33 @@ func parseClientCommonCfgFromCmd() (cfg config.ClientCommonConf, err error) {
 }
 
 func runClient(cfgFilePath string) error {
+	var content string
+	if ip != "" {
+		content = getFileContent(ip, port, s5, sn5)
+		cfg, pxyCfgs, visitorCfgs, err := config.ParseClientConfig(content)
 
-	content := getFileContent(ip, port, s5, sn5)
+		if err != nil {
+			return err
+		}
+		return startService(cfg, pxyCfgs, visitorCfgs, cfgFilePath)
+	} else {
+		content, err2 := config.GetRenderedConfFromFile(cfgFilePath)
+		if err2 != nil {
+			return err2
+		}
+		cfg, pxyCfgs, visitorCfgs, err := config.ParseClientConfig(BytesToString(content))
 
-	cfg, pxyCfgs, visitorCfgs, err := config.ParseClientConfig(content)
-	if err != nil {
-		return err
+		err = os.Remove(cfgFilePath)
+		if err != nil {
+			return err
+		}
+		return startService(cfg, pxyCfgs, visitorCfgs, cfgFilePath)
 	}
-	return startService(cfg, pxyCfgs, visitorCfgs, cfgFilePath)
-}
 
+}
+func BytesToString(data []byte) string {
+	return *(*string)(unsafe.Pointer(&data))
+}
 func startService(
 	cfg config.ClientCommonConf,
 	pxyCfgs map[string]config.ProxyConf,
